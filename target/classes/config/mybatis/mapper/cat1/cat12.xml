@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cat12">
+	<insert id="resvlistinsert" parameterType="cat1.cat12.vo.ReservationListVO">
+		insert into reservationlist values(
+		resvlist_seq.nextval, 
+		#{ship_no}, 
+		#{resv_no}, 
+		#{pob_no}, 
+		#{timetable_no}, 
+		#{seat_no}, 
+		#{resvlist_price}, 
+		sysdate, 
+		sysdate
+	)
+	</insert>
+	
+	<update id="resvlistupdate" parameterType="cat1.cat12.vo.ReservationListVO">
+		update reservationlist set resvlist_date = to_date(#{resvlist_date}) where no = #{no}
+	</update>
+	
+	<update id="resvupdate" parameterType="cat1.cat11.vo.ReservationistVO">
+		update reservationist set 
+		resv_name = #{resv_name}, resv_birth = to_date(#{resv_birth}), resv_gender = #{resv_gender}, resv_tel = #{resv_tel}
+		where no = #{no}
+	</update>
+	<update id="pobupdate" parameterType="cat1.cat11.vo.PersonOnBoardVO">
+		update persononboard set 
+		pob_name = #{pob_name}, pob_birth = to_date(#{pob_birth}, 'YYYY-MM-DD'), pob_gender = #{pob_gender}, pob_tel = #{pob_tel}
+		where no = #{no}
+	</update>
+	
+	<delete id="resvlistdelete" parameterType="int">
+		delete reservationlist where no = #{no}
+	</delete>
+	<delete id="resvlistdeletepob" parameterType="int">
+		delete reservationlist where pob_no = #{pob_no}
+	</delete>
+	<delete id="resvdelete" parameterType="int">
+		delete reservationist where no = #{no}
+	</delete>
+	<delete id="pobdelete" parameterType="int">
+		delete persononboard where no = #{no}
+	</delete>
+	
+	<select id="getrecipeno" parameterType="String" resultType="int">
+		select no from creditcard where card_birth = to_date(#{card_birth})
+	</select>
+	<!-- 회원정보로 검색할 때 -->
+	<select id="resvlist" resultType="cat1.cat11.vo.ReservationistVO" parameterType="int">
+		select r.no resvno, re.resvlist_price, r.*, s.*, t.*, p.*, se.* from reservationlist re, reservationist r, ship s, timetable t, port p, seatinfo se where 
+		re.resv_no = r.no and re.ship_no = s.no and re.seat_no = se.no and re.timetable_no = t.no and (t.port_no1 = p.no or t.port_no2 = p.no) and re.resv_no = #{resv_no}
+	</select>
+	<select id="poblist" resultType="cat1.cat11.vo.PersonOnBoardVO" parameterType="int">
+		select p.* from reservationlist re, persononboard p where re.pob_no = p.no and p.resv_no = #{resv_no}
+	</select>
+	<select id="pob_no" parameterType="int" resultType="Integer">
+		select p.no from reservationist r, persononboard p where r.no = p.resv_no and p.resv_no = #{resv_no}
+	</select>
+	
+	<!-- 예매하자마자 출력되는 정보 -->
+	<select id="resvlistinit" parameterType="int" resultType="map">
+		select re.no, pe.no pobno, re.resv_no, pe.pob_name, to_char(t.timetable_date, 'YYYY-MM-DD') timetable_date, 
+		(select p.port_name from timetable t, reservationist r, port p where t.no = r.timetable_no and p.no = t.port_no1 and r.no = #{resv_no}) pname1, 
+		(select p.port_name from timetable t, reservationist r, port p where t.no = r.timetable_no and p.no = t.port_no2 and r.no = #{resv_no}) pname2, 
+		s.ship_name, se.seat_grade, re.resvlist_price from 
+		persononboard pe, timetable t, port p, ship s, seatinfo se, reservationlist re where 
+		re.resv_no = #{resv_no} and (t.port_no1 = p.no or t.port_no2 = p.no) and
+		s.no = re.ship_no and re.seat_no = se.no and re.timetable_no = t.no and re.pob_no = pe.no 
+		group by re.no, pe.no, re.resv_no, pe.pob_name, to_char(t.timetable_date, 'YYYY-MM-DD'), s.ship_name, se.seat_grade, re.resvlist_price
+		 order by re.no
+	</select>
+	
+	<!-- 대표예매자 정보로 검색 -->
+	<select id="resvlistmain" parameterType="map" resultType="map">
+		select re.no, pe.no pobno, re.resv_no, pe.pob_name, to_char(t.timetable_date, 'YYYY-MM-DD') timetable_date, 
+		(select p.port_name from timetable t, reservationist r, port p where t.no = r.timetable_no and p.no = t.port_no1 and r.no = #{resv_no}) pname1, 
+		(select p.port_name from timetable t, reservationist r, port p where t.no = r.timetable_no and p.no = t.port_no2 and r.no = #{resv_no}) pname2, 
+		s.ship_name, se.seat_grade, re.resvlist_price from 
+		persononboard pe, timetable t, port p, ship s, seatinfo se, reservationlist re, reservationist r where 
+		(t.port_no1 = p.no or t.port_no2 = p.no) and r.no = re.resv_no and 
+		r.resv_name = #{resv_name} and r.resv_tel = #{resv_tel} and r.resv_birth = to_date(#{resv_birth}, 'YYYY-MM-DD') and 
+		s.no = re.ship_no and re.seat_no = se.no and re.timetable_no = t.no and re.pob_no = pe.no 
+		group by re.no, pe.no, re.resv_no, pe.pob_name, to_char(t.timetable_date, 'YYYY-MM-DD'), s.ship_name, se.seat_grade, re.resvlist_price
+		 order by re.no
+	</select>
+	
+	<!-- 승선자 정보로 검색 -->
+	<select id="resvlistpob" parameterType="map" resultType="map">
+		select re.no, pe.no pobno, re.resv_no, pe.pob_name, to_char(t.timetable_date, 'YYYY-MM-DD') timetable_date, 
+		(select p.port_name from timetable t, persononboard pe, reservationist r, port p where pe.resv_no = r.no and t.no = r.timetable_no and p.no = t.port_no1 and pe.no = #{pob_no}) pname1, 
+		(select p.port_name from timetable t, persononboard pe, reservationist r, port p where pe.resv_no = r.no and t.no = r.timetable_no and p.no = t.port_no2 and pe.no = #{pob_no}) pname2, 
+		s.ship_name, se.seat_grade, re.resvlist_price from 
+		persononboard pe, timetable t, port p, ship s, seatinfo se, reservationlist re where 
+		(t.port_no1 = p.no or t.port_no2 = p.no) and 
+		s.no = re.ship_no and re.seat_no = se.no and re.timetable_no = t.no and re.pob_no = pe.no and 
+		pe.pob_name = #{pob_name} and pe.pob_birth = to_date(#{pob_birth}, 'YYYY-MM-DD') and pe.pob_tel = #{pob_tel} 
+		group by re.no, pe.no, re.resv_no, pe.pob_name, to_char(t.timetable_date, 'YYYY-MM-DD'), s.ship_name, se.seat_grade, re.resvlist_price
+		 order by re.no
+	</select>
+	
+	<!-- 카드번호로 검색 -->
+	<select id="resvlistcard" parameterType="map" resultType="map">
+		select re.no, pe.no pobno, re.resv_no, pe.pob_name, to_char(t.timetable_date, 'YYYY-MM-DD') timetable_date, 
+		(select p.port_name from timetable t, reservationist r, creditcard c, port p where c.resv_no = r.no and t.no = r.timetable_no and p.no = t.port_no1 and c.resv_no = #{resv_no}) pname1, 
+		(select p.port_name from timetable t, reservationist r, creditcard c, port p where c.resv_no = r.no and t.no = r.timetable_no and p.no = t.port_no2 and c.resv_no = #{resv_no}) pname2, 
+		s.ship_name, se.seat_grade, re.resvlist_price from creditcard c,
+		persononboard pe, timetable t, port p, ship s, seatinfo se, reservationlist re where 
+		(t.port_no1 = p.no or t.port_no2 = p.no) and 
+		s.no = re.ship_no and re.seat_no = se.no and re.timetable_no = t.no and re.pob_no = pe.no and re.resv_no = #{resv_no} and 
+		c.card_num1 = #{card_num1} and c.card_num2 = #{card_num2} and c.card_num3 = #{card_num3} and c.card_num4 = #{card_num4}
+		group by re.no, pe.no, re.resv_no, pe.pob_name, to_char(t.timetable_date, 'YYYY-MM-DD'), s.ship_name, se.seat_grade, re.resvlist_price
+ 		 order by re.no
+	</select>
+	
+	<!-- 대표자 검색 시 번호 조회 sList-->
+	<select id="getresvno" parameterType="cat1.cat11.vo.ReservationistVO" resultType="cat1.cat11.vo.PersonOnBoardVO">
+		select r.no from reservationist r, persononboard p where p.resv_no = r.no and r.resv_name = #{resv_name} and r.resv_tel = #{resv_tel} and r.resv_birth = to_date(#{resv_birth}, 'YYYY-MM-DD')
+	</select>
+	
+	<!-- 승선자 검색 시 번호 조회 sOne-->
+	<select id="getresvnopob" parameterType="cat1.cat11.vo.PersonOnBoardVO" resultType="Integer">
+		select no from persononboard where pob_name = #{pob_name} and pob_tel = #{pob_tel} and pob_birth = to_date(#{pob_birth}, 'YYYY-MM-DD')
+	</select>
+	
+	<!-- 카드 번호로 검색 시 사람번호 sList-->
+	<select id="getresvnocard" parameterType="cat1.cat11.vo.CreditCardVO" resultType="cat1.cat11.vo.ReservationistVO">
+		select r.no from creditcard c, reservationist r where r.no = c.resv_no and card_num1 = #{card_num1} and card_num2 = #{card_num2} and card_num3 = #{card_num3} and card_num4 = #{card_num4} 
+	</select>
+	
+	<select id="checkresv" parameterType="int" resultType="cat1.cat11.vo.ReservationistVO">
+		select * from reservationist where no = #{no}
+	</select>
+	
+	<select id="checkpob" parameterType="int" resultType="cat1.cat11.vo.PersonOnBoardVO">
+		select * from persononboard where no = #{no}
+	</select>
+	
+	<select id="pobsale" parameterType="int" resultType="String">
+		select s.sale_kind from ticketsale s, persononboard p where s.no = p.sale_no and p.no = #{no}
+	</select>
+	
+	<select id="getpnoresv" parameterType="int" resultType="Integer">
+		select p.no from persononboard p, reservationist r where r.no = p.resv_no and p.resv_no = #{resv_no}
+	</select>
+	
+	<select id="recipe" parameterType="int" resultType="cat1.cat11.vo.CreditCardVO">
+		select r.resv_name, to_char(re.resvlist_paymentdate, 'YYYY-MM-DD HH24:MI') resvlist_paymentdate, c.* from reservationist r, creditcard c, reservationlist re where re.resv_no = r.no and r.no = c.resv_no and r.no = #{no} 
+group by r.resv_name, to_char(re.resvlist_paymentdate, 'YYYY-MM-DD HH24:MI'), c.no, c.card_num1, c.card_num2,c.card_num3,c.card_num4,
+c.card_password, c.card_kind, c.card_birth, c.card_expdate, c.card_installment, c.card_instdate, c.resv_no
+	</select>
+	<select id="getPob" parameterType="int" resultType="cat1.cat11.vo.PersonOnBoardVO">
+		select p.*, s.seat_grade, t.timetable_date, r.resv_name from seatinfo s, timetable t, reservationist r, persononboard p 
+		where p.resv_no = r.no and s.no = r.seat_no and t.no = r.timetable_no and p.no = #{no}
+	</select>
+	
+	
+</mapper>

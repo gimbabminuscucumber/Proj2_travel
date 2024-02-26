@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cat25">
+	<select id="selectList" resultType="map">
+		select
+		(select p.port_name from port p where p.no=t.port_no1) port_name1,
+		(select p.port_name from port p where p.no=t.port_no2) port_name2,
+		to_char(t.timetable_dtime, 'hh24:mi') timetable_dtime ,
+		s.statusinfo_delaytime statusinfo_delaytime,
+		decode(s.statusinfo_declaration, 0 , '입항', 1, '출항' )
+		statusinfo_declaration,
+		(select b.ship_name from ship b where b.no = t.ship_no) ship_name
+		, d.shipstatus_status shipstatus_status ,
+		s.statusinfo_reason statusinfo_reason
+		from shipstatusinfo s, timetable t , shipstatus d
+		where s.timetable_no= t.no and d.ship_no= t.ship_no
+	</select>
+
+	<select id="selectPort" resultType="port">
+		select distinct port_name
+		from port
+	</select>
+</mapper>

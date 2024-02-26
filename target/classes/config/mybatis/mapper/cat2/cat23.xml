@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cat23">
+	<!-- 뷰페이지에서 항로검색시 새창에서 띄워질 항구 리스트 -->
+	<!-- <select id="selectPort" resultType="all.vo.PortVO"> select port_name 
+		from port order by port_name desc </select> <select id="selectShip" resultType="all.vo.TimetableVO" 
+		parameterType ="map"> select s.ship_name from ship s where s.no in (select 
+		t.ship_no from timetable t where date_format(t.timetable_date, '%Y-%m-%d') 
+		= date_format(#{timetable_date}, '%Y-%m-%d' ) ) </select> -->
+
+	<select id="selectList" resultType="map" parameterType="String">
+		select
+		s.ship_name, c.car_name ,c.car_tvr, s.ship_interval
+		from
+		ship s, Car c
+		where s.no = c.ship_no and s.ship_interval =#{ship_interval}
+	</select>
+
+
+	<select id="selectInterval" resultType="ship">
+		select ship_interval from
+		ship
+	</select>
+</mapper>

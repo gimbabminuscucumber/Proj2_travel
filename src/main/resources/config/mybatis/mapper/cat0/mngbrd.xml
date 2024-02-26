@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mngbrd">
+	<select id="mngbrdList" resultType="mngbrd" parameterType="map">
+		select * 
+		from (select rownum rn, t.* 
+				from (select b.*, m.manager_name 
+						from mngbrd b, manager m 
+						where b.manager_no=m.no and b.mngbrd_ctgrno=#{mngbrd_ctgrno}
+				<if test="type !=null">
+					<if test="type=='num'">
+						and num=#{word} 
+					</if>
+					<if test="type !='num'">
+						and ${type} like '%${word}%' 
+					</if>
+				</if>
+						order by b.num desc
+						) t
+				 )
+	<![CDATA[
+		where rn >=#{first} and rn<=#{last}
+	]]>
+	</select> 
+	
+	<select id="mngbrdGetTotal" resultType="int" parameterType="map">
+		select count(*) 
+		from mngbrd b, manager m 
+		where b.manager_no = m.no and b.mngbrd_ctgrno=#{mngbrd_ctgrno}
+		<if test="type != null">
+			<if test="type == 'num'">
+				and num=#{word}
+			</if>
+			<if test="type != 'num'">
+				and ${type} like '%${word}%'
+			</if>
+		</if>
+	</select>
+ 
+	<select id="mngbrdOne" resultType="mngbrd" parameterType="int">
+		select * 
+		from mngbrd b, manager m
+		where b.manager_no=m.no and b.no=#{no}
+	</select>
+ 
+	<insert id="mngbrdInsert" parameterType="mngbrd">
+		insert into mngbrd values(mngbrd_seq.nextval, 0, #{mngbrd_ctgrno}, #{num}, #{mngbrd_part, jdbcType=VARCHAR}, #{mngbrd_title}, #{mngbrd_content}, #{manager_no}, 0, sysdate, #{mngbrd_attn, jdbcType=VARCHAR}, #{mngbrd_file, jdbcType=VARCHAR})
+	</insert>
+	 
+<!-- 윤석 -->	 
+	<select id="mngbrdGetNum21" resultType="int">
+		select mngbrd21_seq.nextval from dual
+	</select>
+	 
+	<select id="mngbrdGetNum22" resultType="int">
+		select mngbrd22_seq.nextval from dual
+	</select>
+
+
+	<select id="mngbrdGetContent" resultType="map" parameterType="int">
+		select b.*, m.manager_name 
+		from mngbrd b, manager m 
+		where b.manager_no=m.no and b.no=#{no}
+	</select>
+	<select id="mngbrdGetContent1" resultType="map" parameterType="int">
+		select b.*, m.manager_name 
+		from mngbrd b, manager m 
+		where b.manager_no=m.no and b.num=#{num} and mngbrd_ctgrno = 34
+	</select>
+	
+	
+	<update id="mngbrdUpdate" parameterType="mngbrd">
+		update mngbrd set mngbrd_part=#{mngbrd_part, jdbcType=VARCHAR}, mngbrd_title=#{mngbrd_title}, mngbrd_content=#{mngbrd_content}, mngbrd_attn=#{mngbrd_attn, jdbcType=VARCHAR}, mngbrd_file=#{mngbrd_file, jdbcType=VARCHAR}
+		where no=#{no}
+	</update>
+	
+	<update id="mngbrdReadCount" parameterType="int"> <!-- 조회수 -->
+		update mngbrd set mngbrd_hit=mngbrd_hit+1 
+		where no=#{no}
+	</update>
+	
+	<delete id="mngbrdDelete" parameterType="int">
+		delete MngBrd 
+		where no=#{no}
+	</delete>
+	
+	<!-- 소라 -->
+	<select id="mngbrdGetNum31" resultType="int">
+		select mngbrd31_seq.nextval from dual
+	</select>
+	 
+	<select id="mngbrdGetNum32" resultType="int">
+		select mngbrd32_seq.nextval from dual
+	</select>
+	 
+	<select id="mngbrdGetNum33" resultType="int">
+		select mngbrd33_seq.nextval from dual
+	</select>
+	 
+	<select id="mngbrdGetNum34" resultType="int">
+		select mngbrd34_seq.nextval from dual
+	</select>
+	 
+	<select id="mngbrdGetNum35" resultType="int">
+		select mngbrd35_seq.nextval from dual
+	</select>
+	 
+	<select id="mngbrdGetNum36" resultType="int">
+		select mngbrd36_seq.nextval from dual
+	</select>
+
+	<select id="mngbrdGetNum37" resultType="int">
+		select mngbrd37_seq.nextval from dual
+	</select>
+	
+	<select id="mngbrdGetNum51" resultType="int">
+		select mngbrd51_seq.nextval from dual
+	</select>
+</mapper>

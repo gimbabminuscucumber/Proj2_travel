@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="islandbrd">
+	<!--  파일 마다 있는 SQL문들을 구분할수 있는 이름  -->
+<!--  사용할 SQL문들을 정의하는 파일  -->
+
+<select id="selectList" resultType="cat6.vo.IslandBoardVO" parameterType="map">
+		select * from 
+			(select rownum rn,t.* from
+				(select b.*, u.user_id from islandboard b,userinfo u where b.user_no = u.no
+					<if test="type != null">
+						<if test="type == 'no'">
+							and b.no=#{word}
+						</if>
+						<if test="type != 'no'">
+							and ${type} like '%${word}%'
+						</if>
+					</if>
+					<!-- 
+						값으로 취급할때 #{}
+						글자 자체로 처리하려면 ${}
+					 -->
+			order by b.no desc) t)
+		<![CDATA[
+			where rn >= #{first} and rn <= #{last}
+		]]>
+	
+	</select>
+	
+	<select id="selectOne" resultType="cat6.vo.IslandBoardVO" parameterType="int">
+		select * from islandboard b, userinfo u where b.user_no = u.no and b.no = #{b.no}
+	</select>
+	
+	
+
+<select id="getTotal" resultType="int" parameterType="map">
+		select count(*) from islandboard b,userinfo u where b.user_no = u.no
+		<if test="type != null">
+			<if test="type == 'no'">
+				and b.no=#{word}
+			</if>
+			<if test="type != 'no'">
+				and ${type} like '%${word}%'
+			</if>
+		</if>
+</select>
+
+<update id="readCount" parameterType="int">
+		update islandboard set islboard_hit = islboard_hit + 1 where  no = #{no}
+</update>
+
+<select id="getContent" parameterType="int" resultType="map">
+	select b.*, u.user_id from islandboard b, userinfo u where b.user_no = u.no and b.no = #{no}
+</select>
+
+<insert id="insert" parameterType="cat6.vo.IslandBoardVO">
+	insert into islandboard values(islandboard_seq.nextval, #{user_no}, 0, #{islboard_title}, #{tdate_no}, #{tpurpose_no}, #{trans_no}, #{accom_no}, #{city_no}, #{islboard_startregion}, #{tschedule_no}, #{islboard_password}, #{islboard_hope}, #{islboard_follower}, #{islboard_content}, sysdate, #{manager_no}, '')
+</insert>
+
+<select id="selectManager" resultType="all.vo.ManagerVO">
+	select * from manager
+</select>
+
+<select id="selectAccommo" resultType="cat6.vo.AccommoVO">
+	select * from accommo
+</select>
+
+<select id="selectTransportation" resultType="cat6.vo.TransportationVO">
+	select * from transportation
+</select>
+
+<select id="selectTraveldate" resultType="cat6.vo.TravelDateVO">
+	select * from traveldate
+</select>
+
+<select id="selectTravelpurpose" resultType="cat6.vo.TravelPurposeVO">
+	select * from travelpurpose
+</select>
+
+<select id="selectTravelschedule" resultType="cat6.vo.TravelScheduleVO">
+	select * from travelschedule
+</select>
+
+<delete id="delete" parameterType="int">
+	delete islandboard where no = #{no}
+</delete>
+
+<update id="update" parameterType="cat6.vo.IslandBoardVO">
+	update islandboard set islboard_title = #{islboard_title}, tdate_no = #{tdate_no}, tpurpose_no = #{tpurpose_no}, trans_no = #{trans_no}, accom_no = #{accom_no}, islboard_startregion = #{islboard_startregion}, tschedule_no = #{tschedule_no}, islboard_password = #{islboard_password}, islboard_hope = #{islboard_hope}, islboard_follower = #{islboard_follower}, islboard_content = #{islboard_content}, islboard_date = sysdate where no = #{no}
+</update>
+
+<update id="reply" parameterType="cat6.vo.IslandBoardVO">
+	update islandboard set islboard_comment = #{islboard_comment} where no = #{no}
+</update>
+
+<select id="contentTdate" resultType="String" parameterType="int">
+	select tdate_date from traveldate where no = #{tdate_no}
+</select>
+
+<select id="contentTrans" resultType="String" parameterType="int">
+	select trans_vehicle from transportation where no = #{trans_no}
+</select>
+
+<select id="contentPurpose" resultType="String" parameterType="int">
+	select tpurpose_purpose from travelpurpose where no = #{tpurpose_no}
+</select>
+
+<select id="contentAccom" resultType="String" parameterType="int">
+	select accom_room from accommo where no = #{accom_no}
+</select>
+
+<select id="contentSchedule" resultType="String" parameterType="int">
+	select tschedule_month from travelschedule where no = #{tschedule_no}
+</select>
+</mapper>

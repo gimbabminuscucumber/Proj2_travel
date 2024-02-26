@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="userinfo">
+	<!-- <select id="checkMng" resultType="all.vo.UserInfoVO"> select user_name 
+		from userinfo where user_status = 0 </select> -->
+
+	<select id="checkLogin" resultType="int"
+		parameterType="userinfo">
+		select no from userinfo where user_id=#{user_id} and
+		user_password=#{user_password}
+	</select>
+
+	<select id="checkId" parameterType="String" resultType="String">
+		select
+		user_id from userinfo where user_id=#{user_id}
+	</select>
+
+	<select id="selectMng" resultType="int" parameterType="userinfo">
+		select no
+		from userinfo where user_status=0 and user_id=#{user_id} and
+		user_password=#{user_password}
+	</select>
+
+
+	<select id="findId" resultType="String" parameterType="userinfo">
+		select
+		user_id from userinfo where user_name = #{user_name} and user_tel
+		=#{user_tel} and to_char(user_birth, 'yyyymmdd') = #{user_birth}
+	</select>
+
+	<select id="findPw" resultType="String" parameterType="userinfo">
+		select
+		user_password from userinfo where user_id=#{user_id} and user_name =
+		#{user_name} and user_tel =#{user_tel} and to_char(user_birth,
+		'yyyymmdd') = #{user_birth}
+	</select>
+
+	<select id="selectOne" parameterType="int" resultType="userinfo">
+		select *
+		from userinfo where no=#{no}
+	</select>
+
+	<insert id="insert" parameterType="all.vo.UserInfoVO">
+		insert into userinfo
+		values(user_seq.nextval,#{user_name},to_date(#{user_birth},
+		'yyyy-mm-dd'),#{user_tel},#{user_id},#{user_password},#{user_gender},#{user_email},1,#{user_terms})
+	</insert>
+
+	<update id="update" parameterType="all.vo.UserInfoVO">
+		update userinfo set
+		user_email=#{user_email},user_tel=#{user_tel},user_password=#{user_password},user_birth=
+		to_date(#{user_birth}, 'yyyy-mm-dd') where no=#{no}
+	</update>
+
+	<delete id="delete" parameterType="int">
+		delete userinfo where no=#{no}
+	</delete>
+
+	<!-- 회원약관 -->
+	<select id="jointerms" resultType="terms">
+		select no, terms_subtitle, terms_content from terms where terms_ctgrno=0
+		order by no asc
+	</select>
+	
+	<select id="selectStatus" resultType="int" parameterType="userinfo">
+		select user_status from userinfo where user_id = #{user_id} and user_password = #{user_password}
+	</select>
+	
+	<select id="userList" resultType="userinfo">
+      select no, user_name, user_birth, user_tel,user_id, user_email from userinfo where user_status = 1
+   </select>
+	
+</mapper>

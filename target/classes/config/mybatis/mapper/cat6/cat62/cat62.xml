@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cat62">
+
+	<select id="selectList1" resultType="all.vo.InfoBoardVO">
+		select infobrd_title, infobrd_content 
+		from infoboard where infobrd_ctgrno = 621 
+		order by no desc
+	</select>
+	<select id="selectList2" resultType="all.vo.InfoBoardVO">
+		select infobrd_title, infobrd_content 
+		from infoboard where infobrd_ctgrno = 622 
+		order by no desc
+	</select>
+	<select id="selectList3" resultType="all.vo.InfoBoardVO">
+		select infobrd_title, infobrd_content 
+		from infoboard where infobrd_ctgrno = 623 
+		order by no desc
+	</select>
+	<select id="selectList4" resultType="all.vo.InfoBoardVO">
+		select infobrd_title, infobrd_content 
+		from infoboard where infobrd_ctgrno = 624
+		order by no desc
+	</select>
+	<select id="selectList5" resultType="all.vo.InfoBoardVO">
+		select infobrd_title, infobrd_content 
+		from infoboard where infobrd_ctgrno = 625 
+		order by no desc
+	</select>
+
+	<select id="selectOne" resultType="all.vo.InfoBoardVO" parameterType="int">
+		select infobrd_title, infobrd_content
+		from infoboard where no = #{no}
+	</select>
+
+	<select id="getTotal" resultType="int" parameterType="map">
+		select count(*) from infoboard
+		<if test="type != null">
+			<if test="type == 'no'">
+				and no=#{word}
+			</if>
+			<if test="type != 'no'">
+				and ${type} like '%${word}%'
+			</if>
+		</if>
+	</select>
+
+	<select id="getContent" resultType="map" parameterType="int">
+		select infobrd_title, infobrd_content
+		from infoboard
+		where no = #{no}
+	</select>
+
+<!-- 	<select id="ctgr" resultType="String" parameterType="int">
+		select * from
+			infobrd_ctgrno = 621	'예매',  
+			infobrd_ctgrno = 622	'환불 / 교환',  
+			infobrd_ctgrno = 623	'운항시간 / 일정',  
+			infobrd_ctgrno = 624	'차량 / 애견',  
+			infobrd_ctgrno = 625	'기타'
+	</select> -->
+
+
+</mapper>

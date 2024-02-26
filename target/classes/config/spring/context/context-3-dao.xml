@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- 우형 -->
+	<bean id = "infoBoardDao" class="all.dao.InfoBoardDAO">
+		<property name="sqlSession" ref="sqlSession"/>
+	</bean>
+	
+	<bean id="islandBoardDao" class="cat6.dao.IslandBoardDAO">
+		<constructor-arg ref="sqlSession"></constructor-arg>
+	</bean>
+	
+	<bean id="shipDao" class="all.dao.ShipDAO">
+		<constructor-arg ref="sqlSession"></constructor-arg>
+	</bean>
+	
+	<bean id="terminalallDao" class="cat4.dao.TerminalAllDAO">
+		<constructor-arg ref="sqlSession"></constructor-arg>
+	</bean>
+	
+	<bean id="tideDao" class="cat4.dao.TideDAO">
+		<constructor-arg ref="sqlSession"></constructor-arg>
+	</bean>
+	
+	<bean id="termsDao" class="all.dao.TermsDAO">
+		<constructor-arg ref="sqlSession"></constructor-arg>
+	</bean>	
+	
+	<!-- 동은 -->
+	<!-- <bean id="mngbrdDao" class="all.dao.MngBrdDAO">
+		<property name="sqlSession" ref="sqlSession" />
+	</bean>	-->
+	<bean id="reviewDao" class="cat5.cat52.dao.ReviewDAO">	<!-- 섬여행평가하기 (review) -->
+		<property name="sqlSession" ref="sqlSession"/>
+	</bean> 
+
+	<bean id="suggestDao" class="cat6.cat63.dao.SuggestDAO">	<!-- 나의섬여행담 (suggest) -->
+		<property name="sqlSession" ref="sqlSession"/>
+	</bean>
+	
+	<!-- 윤석 -->
+	<bean id="userinfoDao" class="all.dao.UserInfoDAO">
+		<property name="sqlSession" ref="sqlSession"/>
+	</bean>
+	
+	<bean id="managerDao" class="all.dao.ManagerDAO">
+		<property name="sqlSession" ref="sqlSession"/>
+	</bean>
+	
+	<bean id="timetableDao" class="all.dao.TimeTableDAO">
+		<property name="sqlSession" ref="sqlSession"/>
+	</bean>
+	<!-- cat21 -->
+	<bean id="mngbrdDao" class="all.dao.MngBrdDAO">
+		<property name="sqlSession" ref="sqlSession"/>
+	</bean>
+
+	<!-- cat22 -->
+
+	<!-- cat23 -->
+	
+	<!-- cat24 -->
+	
+	<bean id="portDao" class="all.dao.PortDAO">
+		<property name="sqlSession" ref="sqlSession"/>
+	</bean>
+	
+	<!-- cat25 -->
+	
+	<bean id="shipstatusinfoDao" class="cat2.cat25.dao.ShipStatusInfoDAO">
+		<property name="sqlSession" ref="sqlSession"/>
+	</bean>
+	
+	<!-- 소라 -->
+	<bean id="viewimgDao" class="all.dao.ViewImgDAO">
+		<property name="sqlSession" ref="sqlSession" />
+	</bean>	
+	<bean id="islandDao" class="cat3.dao.IslandDAO">
+   		<property name="sqlSession" ref="sqlSession" />
+	</bean> 
+	
+	<!-- 동현 -->
+	<bean id="cityDao" class="all.dao.CityDAO">
+		<property name="sqlSession" ref="sqlSession" />
+	</bean>	
+	
+	<bean id="carDao" class="cat1.cat11.dao.CarDAO">
+		<constructor-arg ref="sqlSession"/>
+	</bean>
+	<bean id="creditcardDao" class="cat1.cat11.dao.CreditCardDAO">
+		<constructor-arg ref="sqlSession"/>
+	</bean>
+	<bean id="persononboardDao" class="cat1.cat11.dao.PersonOnBoardDAO">
+		<constructor-arg ref="sqlSession"/>
+	</bean>
+	<bean id="reservationistDao" class="cat1.cat11.dao.ReservationistDAO">
+		<constructor-arg ref="sqlSession"/>
+	</bean>
+	<bean id="resvtermsDao" class="cat1.cat11.dao.ResvTermsDAO">
+		<constructor-arg ref="sqlSession"/>
+	</bean>
+	<bean id="seatinfoDao" class="cat1.cat11.dao.SeatInfoDAO">
+		<constructor-arg ref="sqlSession"/>
+	</bean>
+	<bean id="ticketkindDao" class="cat1.cat11.dao.TicketKindDAO">
+		<constructor-arg ref="sqlSession"/>
+	</bean>
+	<bean id="ticketsaleDao" class="cat1.cat11.dao.TicketSaleDAO">
+		<constructor-arg ref="sqlSession"/>
+	</bean>
+	
+	<bean id="reservationlistDao" class="cat1.cat12.dao.ReservationListDAO">
+		<constructor-arg ref="sqlSession"/>
+	</bean>
+	
+	<bean id="reserveinquireDao" class="cat6.cat61.dao.ReserveInquireDAO">
+		<constructor-arg ref="sqlSession"/>
+	</bean>
+		
+</beans>

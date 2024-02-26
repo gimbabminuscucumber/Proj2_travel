@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "HTTP://mybatis.org/dtd/mybatis-3-config.dtd">
+
+
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="useGeneratedKeys" value="true" />
+		<setting name="defaultExecutorType" value="REUSE" />
+	</settings>
+
+	<typeAliases>
+		<typeAlias type="all.vo.UserInfoVO" alias="userinfo" />
+		<typeAlias type="all.vo.ManagerVO" alias="manager" />
+		<typeAlias type="all.vo.TermsVO" alias="terms"/>
+		<typeAlias type="all.vo.TimeTableVO" alias="timetable"/>
+		<typeAlias type="all.vo.MngBrdVO" alias="mngbrd"/>
+		<typeAlias type="all.vo.ShipVO" alias="ship"/>
+		<typeAlias type="all.vo.PortVO" alias="port"/>
+		<typeAlias type="all.vo.ViewImgVO" alias="viewimg"/>
+		<typeAlias type="all.vo.IslandVO" alias="island"/>
+		<typeAlias type="all.vo.StateVO" alias="state"/>
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="config/mybatis/mapper/cat0/cat0.xml" />
+		<mapper resource="config/mybatis/mapper/cat0/mngbrd.xml"/>
+		
+		<!-- 우형 -->
+		<mapper resource="config/mybatis/mapper/cat4/site.xml" />
+		<mapper resource="config/mybatis/mapper/cat4/islandboard.xml" />
+		<mapper resource="config/mybatis/mapper/cat4/ship.xml" />
+		<mapper resource="config/mybatis/mapper/cat4/terminal.xml" />
+		<mapper resource="config/mybatis/mapper/cat4/travelready.xml" />
+		<mapper resource="config/mybatis/mapper/cat4/tide.xml" />
+		<mapper resource="config/mybatis/mapper/cat7/footer.xml" />
+		
+		<!-- 윤석 -->
+		<mapper resource="config/mybatis/mapper/cat2/cat23.xml"/>
+		<mapper resource="config/mybatis/mapper/cat2/cat24.xml"/>
+		<mapper resource="config/mybatis/mapper/cat2/cat25.xml"/>
+		
+		<!-- 소라 -->
+		<mapper resource="config/mybatis/mapper/cat1/terms.xml" />
+		<mapper resource="config/mybatis/mapper/cat3/island.xml" />
+
+		
+		
+		<!-- 동현 -->
+		<mapper resource="config/mybatis/mapper/cat1/cat11.xml"/>
+		<mapper resource="config/mybatis/mapper/cat1/cat12.xml"/>
+		<mapper resource="config/mybatis/mapper/cat6/cat61.xml"/>
+		
+		<!-- 동은 -->
+		<mapper resource="config/mybatis/mapper/cat5/cat52.xml"/>
+		
+		<mapper resource="config/mybatis/mapper/cat6/cat62/cat62.xml"/>
+		<mapper resource="config/mybatis/mapper/cat6/cat63/cat63.xml"/>
+		
+		<!-- <mapper resource="config/mybatis/mapper/board_select.xml" /> <mapper 
+			resource="config/mybatis/mapper/board_insert.xml" /> <mapper resource="config/mybatis/mapper/board_update.xml" 
+			/> <mapper resource="config/mybatis/mapper/board_delete.xml" /> -->
+	</mappers>
+</configuration>

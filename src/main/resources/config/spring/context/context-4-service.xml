@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<!-- 우형 -->
+	<bean id="islandBoardService" class="cat6.service.IslandBoardService">
+		<constructor-arg ref="islandBoardDao"></constructor-arg>
+	</bean>
+	
+	<bean id ="infoBoardService" class="cat4.service.InfoBoardService">
+		<property name="infoBoardDao" ref="infoBoardDao"></property>
+	</bean>
+	<!-- <bean id="loginService" class="all.service.LoginService">
+		<constructor-arg ref="userinfoDao"></constructor-arg>
+	</bean> -->
+	
+	<!-- <bean id="userinfoService" class="all.service.UserInfoService">
+		<constructor-arg ref="userinfoDao"></constructor-arg>
+	</bean> -->
+	
+	<bean id="shipService" class="cat4.service.ShipService">
+		<constructor-arg ref="shipDao"></constructor-arg>
+	</bean>
+	
+	<bean id="terminalallService" class="cat4.service.TerminalAllService">
+		<constructor-arg ref="terminalallDao"></constructor-arg>
+	</bean>
+	
+	<bean id="tideService" class="cat4.service.TideService">
+		<constructor-arg ref="tideDao"></constructor-arg>
+	</bean>
+	
+	<bean id="termsService" class="all.service.TermsService">
+		<constructor-arg ref="termsDao"></constructor-arg>		<!-- 소라 -->
+	</bean>	
+	
+	
+	
+	
+	<!-- 동은 -->
+	<!-- <bean id="newsService" class="all.service.MngBrdService">	
+		<constructor-arg ref="mngbrdDao"/>
+	</bean>-->
+	
+	<bean id="reviewService" class="cat5.cat52.service.ReviewService">	<!-- 칼럼 no.52 '섬여행평가하기' -->
+		<constructor-arg ref="reviewDao"/>
+	</bean> 
+
+	<!-- <bean id="mngbrdService" class="all.service.MngBrdService">
+		<constructor-arg ref="mngbrdDao" />
+	</bean> -->
+	<bean id="faqService" class="cat6.cat62.service.FaqService">   <!-- 칼럼 no.63 '나의섬여행담' -->
+		<constructor-arg ref="infoBoardDao"/>
+	</bean>
+	<bean id="suggestService" class="cat6.cat63.service.SuggestService">   <!-- 칼럼 no.63 '나의섬여행담' -->
+		<constructor-arg ref="suggestDao"/>
+	</bean>
+	
+	<!-- 윤석 -->
+	<bean id="userinfoService" class="all.service.UserInfoService">
+		<constructor-arg ref="userinfoDao"/>
+	</bean>
+	
+	<bean id="loginService" class="all.service.LoginService">
+		<property name="userinfoDao" ref="userinfoDao"/>
+	</bean>
+	
+	<bean id="mngbrdService" class="all.service.MngBrdService">
+		<constructor-arg ref="mngbrdDao"/>		<!-- 소라 -->
+	</bean>
+	
+	<bean id="carcostService" class="cat2.cat23.service.CarCostService">
+		<constructor-arg ref="shipDao"/>
+	</bean>
+	
+	<bean id="timetableService" class="cat2.cat24.service.TimeTableService">
+		<constructor-arg ref="portDao"/>
+		<constructor-arg ref="timetableDao"/>
+	</bean>
+	
+	<bean id="shipstatusService" class="cat2.cat25.service.ShipStatusInfoService">
+		<constructor-arg ref="shipstatusinfoDao"/>
+	</bean>
+		
+		
+	<!-- 소라 -->
+	<bean id="islandService" class="cat3.service.IslandService">
+   		<constructor-arg ref="islandDao"/>
+	</bean>
+		
+	<!-- 동현 -->
+	<bean id="cat11Service" class="cat1.cat11.service.Cat11Service">
+	 	<constructor-arg ref="carDao"/>
+	 	<constructor-arg ref="creditcardDao"/>
+	 	<constructor-arg ref="persononboardDao"/>
+	 	<constructor-arg ref="reservationistDao"/>
+	 	<constructor-arg ref="resvtermsDao"/>
+	 	<constructor-arg ref="seatinfoDao"/>
+	 	<constructor-arg ref="ticketkindDao"/>
+	 	<constructor-arg ref="ticketsaleDao"/>
+	 	<constructor-arg ref="portDao"/>
+	 	<constructor-arg ref="timetableDao"/>
+	 	<constructor-arg ref="shipDao"/>
+	 	<constructor-arg ref="cityDao"/>
+	 </bean>
+	 
+	 <bean id="cat12Service" class="cat1.cat12.service.Cat12Service">
+	 	<constructor-arg ref="reservationlistDao"/>
+	 	<constructor-arg ref="persononboardDao"/>
+	 </bean>
+	  
+	 <bean id="cat61Service" class="cat6.cat61.service.Cat61Service">
+	 	<constructor-arg ref="reserveinquireDao"/>
+	 </bean>
+	 
+</beans>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="site">
+	<!-- 파일 마다 있는 SQL문들을 구분할수 있는 이름 -->
+	<!-- 사용할 SQL문들을 정의하는 파일 -->
+
+	<select id="selectList" resultType="all.vo.InfoBoardVO"
+		parameterType="int">
+		select * from InfoBoard where infobrd_ctgrno=#{infobrd_ctgrno}
+	</select>
+
+	<select id="selectList2" resultType="all.vo.InfoBoardVO"
+		parameterType="int">
+		select * from InfoBoard where infobrd_ctgrno=#{infobrd_ctgrno}
+	</select>
+
+	<select id="selectList3" resultType="all.vo.InfoBoardVO"
+		parameterType="int">
+		select * from InfoBoard where infobrd_ctgrno=#{infobrd_ctgrno}
+	</select>
+
+	<select id="selectList4" resultType="all.vo.ShipVO">
+		select * from ship
+	</select>
+
+	<select id="selectList5" resultType="all.vo.InfoBoardVO"
+		parameterType="map">
+		select * from InfoBoard where infobrd_ctgrno=#{infobrd_ctgrno} and no =
+		#{no}
+	</select>
+</mapper>

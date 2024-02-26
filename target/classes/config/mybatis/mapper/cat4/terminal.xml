@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="terminal">
+	<!-- 파일 마다 있는 SQL문들을 구분할수 있는 이름 -->
+	<!-- 사용할 SQL문들을 정의하는 파일 -->
+
+	<select id="selectParking" resultType="cat4.vo.ParkingVO"
+		parameterType="int">
+		select * from parking where port_no = #{port_no}
+	</select>
+
+	<select id="selectPublicTerminal"
+		resultType="cat4.vo.PublicTerminalVO" parameterType="int">
+		select * from publicterminal where port_no = #{port_no}
+	</select>
+
+	<select id="selectTrainTerminal"
+		resultType="cat4.vo.TrainTerminalVO" parameterType="int">
+		select * from trainterminal where port_no = #{port_no}
+	</select>
+
+	<select id="selectPlaneTerminal"
+		resultType="cat4.vo.PlaneTerminalVO" parameterType="int">
+		select * from planeterminal where port_no = #{port_no}
+	</select>
+</mapper>

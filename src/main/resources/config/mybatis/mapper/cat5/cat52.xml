@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cat52">
+	<insert id="insert" parameterType="cat5.cat52.vo.ReviewVO">
+		insert into review values(
+			review_seq.nextval,
+			#{review_ctgrno},
+			#{user_no},
+			#{island_no},
+			#{review_num},
+			#{review_title},
+			sysdate,
+			0,
+			#{review_content},
+			#{review_environ},
+			#{review_lodge},
+			#{review_water},
+			#{review_traffic},
+			#{review_stuff},
+			#{review_su},
+			#{review_score}
+		)
+	</insert>
+	
+	<insert id="comminsert" parameterType="all.vo.CommVO">
+		insert into comm values(comm_seq.nextval, #{user_no}, 52, #{comm_comment}, 0, 0, 0)
+	</insert>
+	<select id="getusername" parameterType="int" resultType="String">
+		select user_name from userinfo where no = #{no}
+	</select>
+
+	<update id="update" parameterType="cat5.cat52.vo.ReviewVO">
+		update review set
+		island_no=#{island_no},
+		review_environ=#{review_environ},
+		review_lodge=#{review_lodge},
+		review_water=#{review_water},
+		review_traffic=#{review_traffic},
+		review_stuff=#{review_stuff},
+		review_title=#{review_title},
+		review_content=#{review_content}
+		where no=#{no}
+	</update>
+
+	<delete id="delete" parameterType="int">
+		delete review where no = #{no}
+	</delete>
+
+	<select id="rankList" resultType="cat5.cat52.vo.ReviewVO">
+		select * from
+		    (select rownum rn, t.* from
+		        (select i.island_name,
+		        	avg(r.review_environ) 	review_environ,
+		        	avg(r.review_lodge) 	review_lodge,
+		        	avg(r.review_water) 	review_water,
+		        	avg(r.review_traffic) 	review_traffic,
+		        	avg(r.review_stuff) 	review_stuff,
+		        	count(r.review_su) 		review_su,
+		        	avg(r.review_score) 	avg
+		        from island i, review r
+		        where r.island_no = i.no
+		        group by i.island_name
+		        order by avg desc
+		        ) t
+		    )
+		<![CDATA[
+		where rn > 0 and rn <= 5
+		]]>
+	</select>
+	
+
+	<select id="selectList" resultType="cat5.cat52.vo.ReviewVO" parameterType="map"> <!-- 전체보기 -->
+		select * from
+			(select rownum rn, t.* from
+				(select r.*, i.island_name, u.user_name 
+				from review r, island i, userinfo u
+				where r.island_no = i.no and r.user_no = u.no
+				<if test="type != null">
+					<if test="type == 'no'">
+						and r.no=#{word}
+					</if>
+					<if test="type != 'no'">
+						and ${type} like '%${word}%'
+					</if>
+				</if>
+				order by r.no desc
+				) t
+			)
+		<![CDATA[
+		where rn >=#{first} and rn<=#{last}		
+		]]>
+	</select>
+	<!-- SQL문에 연산자는 인식을 하지 못하기 때문에 <![CDATA[  ]]> 로 처리해야 함 -->
+	<!-- #{} : 저장된 데이터를 불러오는 방식 ${} : 입력받은 값을 불러오는 방식 -->
+
+	<select id="suCount" resultType="int" parameterType="int">	<!-- 평가 총원 구하는거 -->
+		select count(island_no)
+		from review
+		group by island_no
+		order by island_no asc
+	</select>
+
+	<select id="selectOne" resultType="cat5.cat52.vo.ReviewVO" parameterType="int">	<!-- 특정 컬럼 하나만 보기 -->
+		select * from review where no = #{no}
+	</select>
+
+	<select id="getTotal" resultType="int" parameterType="map"> <!-- 게시글 총 개수 -->
+		select count(*) from review
+			<if test="type != null">
+				<if test="type == 'no'">
+					where no=#{word}
+				</if>
+				<if test="type != 'no'">
+					where ${type} like '%${word}%'
+				</if>
+			</if>
+	</select>
+	
+
+	<select id="readCount" resultType="int" parameterType="int">
+		update review set 
+		review_hit = review_hit + 1 
+		where no = #{no}
+	</select>
+	
+	<select id="getContent" resultType="map" parameterType="int">	<!-- 게시글 목록 / 내용 -->
+		select r.*, u.user_name, i.island_name
+		from userinfo u, island i, review r
+		where r.island_no = i.no and r.user_no = u.no and r.no =#{no}
+	</select>
+
+	<select id="reviewNum" resultType="int">
+		select review52_seq.nextval from dual
+	</select>
+
+	<select id="matchIsland" resultType="int" parameterType="String">	<!-- 섬이름 매칭 시키는거 >> 입력 받는 island_name이 DB의 island_name과 같으면 no 를 출력 -->
+		select no from island where island_name = #{island_name}
+	</select>
+
+
+	<select id="reviewAvg" resultType="double" parameterType="int">	<!-- 평가한 항목들의 평균을 구하여 정렬 -->
+		select island_no, avg(review_score) avg 
+		from review 
+		group by island_no
+		order by avg desc
+	</select>
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="island">
+	
+	<select id="islandList" resultType="island">
+		select * 
+		from island
+		where no !=0
+		order by island_name 
+	</select>
+
+
+	<select id="islandOne" resultType="island" parameterType="int">
+		select * 
+		from island i, state s, city c, manager m 
+		where i.state_no=s.no and i.city_no=c.no and i.manager_no=m.no and i.no=#{no}
+	</select>
+ 
+	<insert id="islandInsert" parameterType="island">
+		insert into island values (island_seq.nextval, #{state_no}, #{city_no}, #{island_name}, #{manager_no} #{island_info, jdbcType=VARCHAR}, #{island_area, jdbcType=VARCHAR}, #{island_addr, jdbcType=VARCHAR}, #{island_inhabited, jdbcType=VARCHAR}, #{island_longitude, jdbcType=VARCHAR})
+	</insert>
+
+	<select id="islandGetContent" resultType="island" parameterType="int">
+		select * 
+		from island 
+		where no=#{no}
+	</select>
+	
+	<!-- 게시글 부분
+	<select id="islandMngbrd" resultType="mngbrd" parameterType="int">
+		select * from mngbrd where island_no=#{no}
+	</select>
+	 -->
+	 
+	<update id="islandUpdate" parameterType="island">
+		update island set island_name=#{island_name}, island_info=#{island_info, jdbcType=VARCHAR}, island_area=#{island_addr, jdbcType=VARCHAR}, island_inhabited=#{island_inhabited, jdbcType=VARCHAR}, island_longitude=#{island_longitude, jdbcType=VARCHAR}
+		where no=#{no}
+	</update>
+	
+	<delete id="islandDelete" parameterType="int">
+		delete island 
+		where no=#{no}
+	</delete>
+	
+	
+	<!-- search island by area -->
+	
+	<select id="searchList" resultType="island" parameterType="int">
+		select * from island where state_no=#{sno} and no !=0
+		order by island_name
+	</select>
+	
+	<select id="stateList" resultType="state">
+		select * from state 
+		where no !=0 
+	</select>
+	
+	
+</mapper>
+

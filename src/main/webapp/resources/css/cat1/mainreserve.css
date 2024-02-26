@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+		#seat:hover #tooltipseat{
+			visibility: visible;
+		}
+		#ship:hover #tooltipship{
+			visibility: visible;
+		}
+
+		.hiddencat1{
+			display:none;
+		}

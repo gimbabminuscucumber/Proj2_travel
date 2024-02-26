@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cat11">
+	<select id="getResvTerms" resultType="String">
+		select resvterms_content from resvterms where resvterms_num = 110 
+	</select>
+	
+	<!--  -->
+	<select id="citylist" resultType="all.vo.CityVO">
+		select no, city_name from city
+	</select>
+	
+	<!-- port_no1 -->
+	<select id="cityport" resultType="all.vo.PortVO" parameterType="int">
+		select p.no, p.port_name from port p, city c where p.city_no = c.no and c.no = #{no}	
+	</select>
+	<!-- port_no2 -->
+	<select id="portlist" resultType="all.vo.PortVO" parameterType="int">
+		select p.no, p.port_name from port p, timetable t where 
+		(p.no = t.port_no1 or p.no = t.port_no2) and (t.port_no2 = #{port_no} or t.port_no1 = #{port_no}) and p.no != #{port_no} group by p.no, p.port_name
+	</select>
+	
+	<select id="port" resultType="all.vo.PortVO">
+		select * from port
+	</select>
+	
+	<select id="resvlist" resultType="map" parameterType="all.vo.TimeTableVO">
+		select s.no, s.ship_name, se.no seatno, se.seat_total, se.seat_person, se.seat_student, se.seat_child, se.seat_grand, se.seat_baby, se.seat_grade, t.no timeno, t.timetable_dtime, t.timetable_ltime from ship s, seatinfo se, timetable t
+		 where t.port_no1 = #{port_no1} and t.port_no2 = #{port_no2} and t.timetable_date = to_date(#{timetable_date}) and s.no = t.ship_no and s.no = se.ship_no 
+		 group by s.no, s.ship_name, se.no, se.seat_total, se.seat_person, se.seat_student, se.seat_child, se.seat_grand, se.seat_baby, se.seat_grade, t.no, t.timetable_dtime, t.timetable_ltime
+	</select>
+		
+	<select id="seatprice" parameterType="int" resultType="cat1.cat11.vo.SeatInfoVO">
+		select * from seatinfo where no = #{no}
+	</select>
+	
+	<select id="shipcomp" parameterType="int" resultType="all.vo.ShipVO">
+		select ship_company, ship_comtel from ship where no = #{no}
+	</select>
+	
+	<!-- 다음페이지에서 공통으로 띄우는 것 -->
+	<select id="gongyong" resultType="String">
+		select resvterms_content from resvterms where resvterms_num = 111
+	</select>
+	<!-- 다음페이지에서 바로띄우는 것 -->
+	<select id="sign" parameterType="int" resultType="String">
+		select r.resvterms_content from terms t, resvterms r where t.ship_no = #{ship_no} and t.resvterms_num = r.resvterms_num
+	</select>
+	<select id="signnum" resultType="int" parameterType="int">
+		select resvterms_num from terms where ship_no = #{ship_no}
+	</select>
+	<!-- 차량 선박 클릭시 -->
+	<select id="carterms" resultType="String">
+		select resvterms_content from resvterms where resvterms_num = 114
+	</select>
+	<!-- 항구 클릭시 -->
+	<select id="clicksign" resultType="String" parameterType="int">
+		select terms_content from terms where terms_ctgrno = 1111 and ship_no = #{ship_no}
+	</select>
+	<!-- 선박 클릭시 -->
+	<select id="checksign" resultType="String" parameterType="int">
+		select terms_content from terms where ship_no = #{ship_no} and terms_content not in('content')
+	</select>
+	
+	<insert id="resvinsert" parameterType="cat1.cat11.vo.ReservationistVO">
+		insert into reservationist values(
+		#{no},
+		#{resv_name}, 
+		to_date(#{resv_birth}), 
+		#{resv_gender},
+		#{resv_tel},
+		#{sale_no},
+		#{resv_emergtel},
+		#{resv_foreign},
+		#{seat_no},
+		#{timetable_no},
+		#{resv_addr, jdbcType=VARCHAR}
+	)
+	</insert>
+	<select id="getresvno" parameterType="cat1.cat11.vo.ReservationistVO" resultType="int">
+		select no from reservationist where resv_name = #{resv_name} and resv_tel = #{resv_tel}
+	</select>
+	<select id="resvnextval" resultType="int">
+		select resv_seq.nextval from dual
+	</select>
+	<insert id="pobinsert" parameterType="cat1.cat11.vo.PersonOnBoardVO">
+		insert into persononboard values(
+		pob_seq.nextval,
+		#{resv_no},
+		#{pob_name}, 
+		to_date(#{pob_birth}), 
+		#{pob_gender},
+		#{pob_tel},
+		#{sale_no},
+		#{pob_emergtel},
+		#{pob_foreign},
+		#{pob_addr, jdbcType=VARCHAR}
+	)
+	</insert>
+	
+	<insert id="cardinsert" parameterType="cat1.cat11.vo.CreditCardVO">
+		insert into creditcard values(
+		card_seq.nextval, 
+		#{resv_no}, 
+		#{card_kind}, 
+		#{card_num1}, 
+		#{card_num2}, 
+		#{card_num3}, 
+		#{card_num4}, 
+		#{card_password}, 
+		to_date(#{card_expdate}), 
+		to_date(#{card_birth}), 
+		#{card_installment}, 
+		to_date(#{card_instdate, jdbcType=VARCHAR})
+	)
+	</insert>
+	
+	<select id="carlist" parameterType="int" resultType="cat1.cat11.vo.CarVO">
+		select * from car where ship_no = #{ship_no}
+	</select>
+	<select id="resvbirth" parameterType="int" resultType="String">
+		select to_char(resv_birth, 'YYMMDD') from reservationist where no = #{no}
+	</select>
+	
+	<select id="ticketlist" resultType="cat1.cat11.vo.TicketKindVO" parameterType="map">
+		select * from ticketkind
+		<if test="type != null">
+			where ticket_kind like '%${type}%'
+		</if>
+	</select>
+	<select id="salelist" resultType="cat1.cat11.vo.TicketSaleVO" parameterType="int">
+		select * from ticketsale where ticket_no = #{no}
+	</select>
+	
+	<select id="portaddr" parameterType="int" resultType="String">
+		select port_addr from port where no = #{no}
+	</select>
+	
+	<select id="salekind" parameterType="int" resultType="cat1.cat11.vo.TicketSaleVO">
+		select s.no, s.sale_kind from ticketsale s, ticketkind t where 
+		s.ticket_no = t.no and t.no = #{no}
+	</select>
+	
+	<select id="saleprice" parameterType="int" resultType="int">
+		select sale_rate from ticketsale where no = #{no}
+	</select>
+	<select id="personprice" parameterType="int" resultType="String">
+		select seat_person from seatinfo where no = #{no}
+	</select>
+	<select id="studentprice" parameterType="int" resultType="String">
+		select seat_student from seatinfo where no = #{no}
+	</select>
+	<select id="childprice" parameterType="int" resultType="String">
+		select seat_child from seatinfo where no = #{no}
+	</select>
+	<select id="grandprice" parameterType="int" resultType="String">
+		select seat_grand from seatinfo where no = #{no}
+	</select>
+	<select id="babprice" parameterType="int" resultType="String">
+		select seat_baby from seatinfo where no = #{no}
+	</select>
+	<select id="carprice" parameterType="int" resultType="map">
+		select * from car where no = #{no}
+	</select>
+	
+	<select id="pobno" parameterType="cat1.cat11.vo.PersonOnBoardVO" resultType="int">
+		select no from persononboard where pob_name = #{pob_name} and pob_tel = #{pob_tel}
+	</select>
+</mapper>

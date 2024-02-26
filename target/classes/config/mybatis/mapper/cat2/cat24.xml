@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cat24">
+	<select id="selectPort" resultType="all.vo.PortVO">
+		select port_name from port
+		order by port_name desc
+	</select>
+
+	<select id="selectList" resultType="map"
+		parameterType="timetable">
+		select
+		(select b.ship_name from ship b where b.no=t.ship_no) ship_name
+		, (select p.port_name from port p where t.port_no1= p.no ) port_name1
+		, (select p.port_name from port p where t.port_no2= p.no ) port_name2
+		, to_char(t.timetable_dtime, 'hh24:mi') TIMETABLE_DTIME,
+		to_char(t.timetable_ltime, 'hh24:mi') TIMETABLE_LTIME
+		, s.seat_grade SEAT_GRADE, s.seat_person SEAT_PERSON,s.seat_student
+		SEAT_STUDENT, s.seat_grand SEAT_GRAND, s.seat_child SEAT_CHILD
+		from timetable t , seatinfo s
+		where s.ship_no= t.ship_no and t.timetable_date = to_date(
+		#{timetable_date}, 'yyyy-mm-dd') and t.port_no2= #{port_no2}
+
+	</select>
+
+	<select id="portList" resultType="port">
+		select distinct p.port_name, p.no from port p , timetable t where
+		t.port_no2= p.no
+	</select>
+</mapper>
