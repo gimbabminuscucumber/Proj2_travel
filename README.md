@@ -3,12 +3,11 @@
 
 ## 환경
 - macOS
-- jdk 
+- jdk 1.7
 - tomcat 9.0
 - sts tool
 - oracleDB
 - 인코딩 utf-8
-
 
 ## 테이블
 
